@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <header>
+        <title>HTML5 Canvas</title>
+        <link type="text/css" href="core.css">
+        <link type="text/css" href="typeography.css">
+        <style type="text/css">
+        body, html{
+            margin: 0;
+            width: 100%;
+            height 100%;
+            padding: 100%;
+            overflow: hidden;
+        }
+        #Starfiled{
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            top: 0%;
+            left: 0%;
+            position: absolute;
+        }
+        </style>
+    </header>
+    <body>
+        <div id="Starfield"></div>
+        <script src="js/starfield.js"></script>
+        <script src="js/spaceengine"></script>
+        <script>
+            var container = document.getElementById('starfield');
+            var starfield = new Starfield();
+            starfield.initialise(container);
+            starfield.start();
+        </script>
+    </body>
+</html>
