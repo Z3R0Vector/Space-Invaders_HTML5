@@ -138,45 +138,45 @@ function GameLoop(game) {
 
 Game.prototype.pushState = function(state) {
 
-    //  If there's an enter function for the new state, call it.
+    //  Entrada de função para a nova fase
     if(state.enter) {
         state.enter(game);
     }
-    //  Set the current state.
+    //  Determina o estado atual.
     this.stateStack.push(state);
 };
 
 Game.prototype.popState = function() {
 
-    //  Leave and pop the state.
+    //  Sair da fase.
     if(this.currentState()) {
         if(this.currentState().leave) {
             this.currentState().leave(game);
         }
 
-        //  Set the current state.
+        //  Sair da fase atual.
         this.stateStack.pop();
     }
 };
 
-//  The stop function stops the game.
+//  A função de pausa interrompe o jogo.
 Game.prototype.stop = function Stop() {
     clearInterval(this.intervalId);
 };
 
-//  Inform the game a key is down.
+//  Informar ao jogo que a chave está em baixo.
 Game.prototype.keyDown = function(keyCode) {
     this.pressedKeys[keyCode] = true;
-    //  Delegate to the current state too.
+    //  Delegar ao estado atual também.
     if(this.currentState() && this.currentState().keyDown) {
         this.currentState().keyDown(this, keyCode);
     }
 };
 
-//  Inform the game a key is up.
+//  Informar ao jogo que a chave stá acima.
 Game.prototype.keyUp = function(keyCode) {
     delete this.pressedKeys[keyCode];
-    //  Delegate to the current state too.
+    //  Delegar ao estado atual também.
     if(this.currentState() && this.currentState().keyUp) {
         this.currentState().keyUp(this, keyCode);
     }
@@ -188,7 +188,7 @@ function WelcomeState() {
 
 WelcomeState.prototype.enter = function(game) {
 
-    // Create and load the sounds.
+    // Criar e carregar os sons.
     game.sounds = new Sounds();
     game.sounds.init();
     game.sounds.loadSound('shoot', 'sounds/shoot.wav');
@@ -203,7 +203,7 @@ WelcomeState.prototype.update = function (game, dt) {
 
 WelcomeState.prototype.draw = function(game, dt, ctx) {
 
-    //  Clear the background.
+    //  Limpar a background.
     ctx.clearRect(0, 0, game.width, game.height);
 
     ctx.font="30px Arial";
@@ -213,12 +213,12 @@ WelcomeState.prototype.draw = function(game, dt, ctx) {
     ctx.fillText("Space Invaders", game.width / 2, game.height/2 - 40); 
     ctx.font="16px Arial";
 
-    ctx.fillText("Press 'Space' to start.", game.width / 2, game.height/2); 
+    ctx.fillText("Precione 'espaço' para começar", game.width / 2, game.height/2); 
 };
 
 WelcomeState.prototype.keyDown = function(game, keyCode) {
-    if(keyCode == 32) /*space*/ {
-        //  Space starts the game.
+    if(keyCode == 32) /*espaço*/ {
+        //  Tecla espaço começa o jogo.
         game.level = 1;
         game.score = 0;
         game.lives = 3;
@@ -236,7 +236,7 @@ GameOverState.prototype.update = function(game, dt) {
 
 GameOverState.prototype.draw = function(game, dt, ctx) {
 
-    //  Clear the background.
+    //  Limpar a background.
     ctx.clearRect(0, 0, game.width, game.height);
 
     ctx.font="30px Arial";
@@ -251,8 +251,8 @@ GameOverState.prototype.draw = function(game, dt, ctx) {
 };
 
 GameOverState.prototype.keyDown = function(game, keyCode) {
-    if(keyCode == 32) /*space*/ {
-        //  Space restarts the game.
+    if(keyCode == 32) /*espaço*/ {
+        //  Tecla espaço recomeça o jogo.
         game.lives = 3;
         game.score = 0;
         game.level = 1;
@@ -260,18 +260,18 @@ GameOverState.prototype.keyDown = function(game, keyCode) {
     }
 };
 
-//  Create a PlayState with the game config and the level you are on.
+//  Criar uma fase jogável com as configurações ativas.
 function PlayState(config, level) {
     this.config = config;
     this.level = level;
 
-    //  Game state.
+    //  Fase do jogo.   
     this.invaderCurrentVelocity =  10;
     this.invaderCurrentDropDistance =  0;
     this.invadersAreDropping =  false;
     this.lastRocketTime = null;
 
-    //  Game entities.
+    //  objetos do jogo.
     this.ship = null;
     this.invaders = [];
     this.rockets = [];
@@ -280,15 +280,15 @@ function PlayState(config, level) {
 
 PlayState.prototype.enter = function(game) {
 
-    //  Create the ship.
+    //  Criar nave
     this.ship = new Ship(game.width / 2, game.gameBounds.bottom);
 
-    //  Setup initial state.
+    //  Construir fase inicial
     this.invaderCurrentVelocity =  10;
     this.invaderCurrentDropDistance =  0;
     this.invadersAreDropping =  false;
 
-    //  Set the ship speed for this level, as well as invader params.
+    //  Mudar velocidade das naves por level
     var levelMultiplier = this.level * this.config.levelDifficultyMultiplier;
     this.shipSpeed = this.config.shipSpeed;
     this.invaderInitialVelocity = this.config.invaderInitialVelocity + (levelMultiplier * this.config.invaderInitialVelocity);
@@ -296,7 +296,7 @@ PlayState.prototype.enter = function(game) {
     this.bombMinVelocity = this.config.bombMinVelocity + (levelMultiplier * this.config.bombMinVelocity);
     this.bombMaxVelocity = this.config.bombMaxVelocity + (levelMultiplier * this.config.bombMaxVelocity);
 
-    //  Create the invaders.
+    //  Criar os "invaders"
     var ranks = this.config.invaderRanks;
     var files = this.config.invaderFiles;
     var invaders = [];
@@ -316,10 +316,7 @@ PlayState.prototype.enter = function(game) {
 
 PlayState.prototype.update = function(game, dt) {
     
-    //  If the left or right arrow keys are pressed, move
-    //  the ship. Check this on ticks rather than via a keydown
-    //  event for smooth movement, otherwise the ship would move
-    //  more like a text editor caret.
+    //  Precionando a tecla esquerda e direita para mover a nave.
     if(game.pressedKeys[37]) {
         this.ship.x -= this.shipSpeed * dt;
     }
@@ -330,7 +327,7 @@ PlayState.prototype.update = function(game, dt) {
         this.fireRocket();
     }
 
-    //  Keep the ship in bounds.
+    //  Limites de movimento da nave.
     if(this.ship.x < game.gameBounds.left) {
         this.ship.x = game.gameBounds.left;
     }
@@ -338,29 +335,29 @@ PlayState.prototype.update = function(game, dt) {
         this.ship.x = game.gameBounds.right;
     }
 
-    //  Move each bomb.
+    //  Movimentação de cada tiro.
     for(var i=0; i<this.bombs.length; i++) {
         var bomb = this.bombs[i];
         bomb.y += dt * bomb.velocity;
 
-        //  If the rocket has gone off the screen remove it.
+        //  Se o tiro sair da tela é removido.
         if(bomb.y > this.height) {
             this.bombs.splice(i--, 1);
         }
     }
 
-    //  Move each rocket.
+    //  Movimentação de cada tiro do jogador.
     for(i=0; i<this.rockets.length; i++) {
         var rocket = this.rockets[i];
         rocket.y -= dt * rocket.velocity;
 
-        //  If the rocket has gone off the screen remove it.
+        //  Se o tiro sair da tela é removido.
         if(rocket.y < 0) {
             this.rockets.splice(i--, 1);
         }
     }
 
-    //  Move the invaders.
+    //  Movimentação dos "invaders".
     var hitLeft = false, hitRight = false, hitBottom = false;
     for(i=0; i<this.invaders.length; i++) {
         var invader = this.invaders[i];
@@ -382,7 +379,7 @@ PlayState.prototype.update = function(game, dt) {
         }
     }
 
-    //  Update invader velocities.
+    //  Alteração da velocidade dos 
     if(this.invadersAreDropping) {
         this.invaderCurrentDropDistance += this.invaderVelocity.y * dt;
         if(this.invaderCurrentDropDistance >= this.config.invaderDropDistance) {
@@ -391,21 +388,21 @@ PlayState.prototype.update = function(game, dt) {
             this.invaderCurrentDropDistance = 0;
         }
     }
-    //  If we've hit the left, move down then right.
+    //  Quando atingido indo para a esquerda, ele vai para a direita.
     if(hitLeft) {
         this.invaderCurrentVelocity += this.config.invaderAcceleration;
         this.invaderVelocity = {x: 0, y:this.invaderCurrentVelocity };
         this.invadersAreDropping = true;
         this.invaderNextVelocity = {x: this.invaderCurrentVelocity , y:0};
     }
-    //  If we've hit the right, move down then left.
+    //  Quando atingido indo para a direita, ele vai para a esquerda.
     if(hitRight) {
         this.invaderCurrentVelocity += this.config.invaderAcceleration;
         this.invaderVelocity = {x: 0, y:this.invaderCurrentVelocity };
         this.invadersAreDropping = true;
         this.invaderNextVelocity = {x: -this.invaderCurrentVelocity , y:0};
     }
-    //  If we've hit the bottom, it's game over.
+    //  Quando atingido de baixo, ele morre.
     if(hitBottom) {
         this.lives = 0;
     }
@@ -438,7 +435,7 @@ PlayState.prototype.update = function(game, dt) {
     var frontRankInvaders = {};
     for(var i=0; i<this.invaders.length; i++) {
         var invader = this.invaders[i];
-        // Ranking dos "invader" no jogo.
+        // Ranking dos "invaders" no jogo.
         if(!frontRankInvaders[invader.file] || frontRankInvaders[invader.file].rank < invader.rank) {
             frontRankInvaders[invader.file] = invader;
         }
