@@ -206,12 +206,12 @@ WelcomeState.prototype.draw = function(game, dt, ctx) {
     //  Limpar a background.
     ctx.clearRect(0, 0, game.width, game.height);
 
-    ctx.font="30px Arial";
+    ctx.font="200px Invaders";
     ctx.fillStyle = '#ffffff';
     ctx.textBaseline="center"; 
     ctx.textAlign="center"; 
-    ctx.fillText("Space Invaders", game.width / 2, game.height/2 - 40); 
-    ctx.font="16px Arial";
+    ctx.fillText(".", game.width / 2, game.height/2 - 40); 
+    ctx.font="20px Cosmic";
 
     ctx.fillText("Precione 'espaço' para começar", game.width / 2, game.height/2); 
 };
@@ -239,15 +239,15 @@ GameOverState.prototype.draw = function(game, dt, ctx) {
     //  Limpar a background.
     ctx.clearRect(0, 0, game.width, game.height);
 
-    ctx.font="30px Arial";
+    ctx.font="30px Cosmic";
     ctx.fillStyle = '#ffffff';
     ctx.textBaseline="center"; 
     ctx.textAlign="center"; 
     ctx.fillText("Game Over!", game.width / 2, game.height/2 - 40); 
-    ctx.font="16px Arial";
-    ctx.fillText("You scored " + game.score + " and got to level " + game.level, game.width / 2, game.height/2);
-    ctx.font="16px Arial";
-    ctx.fillText("Press 'Space' to play again.", game.width / 2, game.height/2 + 40);   
+    ctx.font="20px Cosmic";
+    ctx.fillText("Voce marcou " + game.score + " pontos e chegou a fase " + game.level, game.width / 2, game.height/2);
+    ctx.font="20px Cosmic";
+    ctx.fillText("Precione 'Espaço' para jogar novamente.", game.width / 2, game.height/2 + 40);   
 };
 
 GameOverState.prototype.keyDown = function(game, keyCode) {
@@ -497,16 +497,16 @@ PlayState.prototype.draw = function(game, dt, ctx) {
     ctx.clearRect(0, 0, game.width, game.height);
     
     //  Modelo da nave.
-    ctx.fillStyle = '#999999';
+    ctx.fillStyle = '#bcbcbc';
     ctx.fillRect(this.ship.x - (this.ship.width / 2), this.ship.y - (this.ship.height / 2), this.ship.width, this.ship.height);
 
     //  Modelo dos "invaders".
-    ctx.fillStyle = '#006600';
+    ctx.fillStyle = '#00c600';
     for(var i=0; i<this.invaders.length; i++) {
         var invader = this.invaders[i];
         ctx.fillRect(invader.x - invader.width/2, invader.y - invader.height/2, invader.width, invader.height);
     }
-
+    
     //  Modelagem de tiros do inimigo.
     ctx.fillStyle = '#ff5555';
     for(var i=0; i<this.bombs.length; i++) {
@@ -523,12 +523,12 @@ PlayState.prototype.draw = function(game, dt, ctx) {
 
     //  Modo Info.
     var textYpos = game.gameBounds.bottom + ((game.height - game.gameBounds.bottom) / 2) + 14/2;
-    ctx.font="14px Arial";
+    ctx.font="20px Cosmic";
     ctx.fillStyle = '#ffffff';
-    var info = "Lives: " + game.lives;
+    var info = "Vidas: " + game.lives;
     ctx.textAlign = "left";
     ctx.fillText(info, game.gameBounds.left, textYpos);
-    info = "Score: " + game.score + ", Level: " + game.level;
+    info = "Pontuação: " + game.score + " Fase: " + game.level;
     ctx.textAlign = "right";
     ctx.fillText(info, game.gameBounds.right, textYpos);
 
@@ -589,11 +589,11 @@ PauseState.prototype.draw = function(game, dt, ctx) {
     //  Limpa a background.
     ctx.clearRect(0, 0, game.width, game.height);
 
-    ctx.font="14px Arial";
+    ctx.font="30px Cosmic";
     ctx.fillStyle = '#ffffff';
     ctx.textBaseline="middle";
     ctx.textAlign="center";
-    ctx.fillText("Paused", game.width / 2, game.height/2);
+    ctx.fillText("Pause", game.width / 2, game.height/2);
     return;
 };
 
@@ -631,13 +631,13 @@ LevelIntroState.prototype.draw = function(game, dt, ctx) {
     //  Limpa a background.
     ctx.clearRect(0, 0, game.width, game.height);
 
-    ctx.font="36px Arial";
+    ctx.font="36px Cosmic";
     ctx.fillStyle = '#ffffff';
     ctx.textBaseline="middle"; 
     ctx.textAlign="center"; 
     ctx.fillText("Level " + this.level, game.width / 2, game.height/2);
-    ctx.font="24px Arial";
-    ctx.fillText("Ready in " + this.countdownMessage, game.width / 2, game.height/2 + 36);      
+    ctx.font="24px Cosmic";
+    ctx.fillText("Começando em " + this.countdownMessage, game.width / 2, game.height/2 + 36);      
     return;
 };
 
@@ -738,8 +738,8 @@ Sounds.prototype.loadSound = function(name, url) {
     try {
       req.send();
     } catch(e) {
-      console.log("An exception occured getting sound the sound " + name + " this might be " +
-         "because the page is running from the file system, not a webserver.");
+      console.log("Ocorreu um problema ficando sem som " + name + " isso pode ser " +
+         "porque a página está sendo executado a partir do sistema de arquivos, e não um servidor web.");
       console.log(e);
     }
 };

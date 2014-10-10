@@ -1,40 +1,104 @@
 <!DOCTYPE html>
 <html>
-    <header>
-        <title>HTML5 Canvas</title>
-        <link type="text/css" href="core.css">
-        <link type="text/css" href="typeography.css">
-        <style type="text/css">
-        body, html{
-            margin: 0;
-            width: 100%;
-            height 100%;
-            padding: 100%;
-            overflow: hidden;
-        }
-        #Starfiled{
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            top: 0%;
-            left: 0%;
-            position: absolute;
-        }
-        @font-face {
-            font-family: Cosmic;
-            src: url(ca.ttf);
-        }
+    <head>
+        <title>Space Invaders</title>
+        <link rel="stylesheet" type="text/css" href="css/core.css">
+        <link rel="stylesheet" type="text/css" href="css/typeography.css">
+        <style>
+            body, html { 
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+            }
+
+            #starfield {
+                width:100%;
+                height:100%;
+                z-index: -1;
+                position: absolute;
+                left: 0px;
+                top: 0px;
+            }
+            #gamecontainer {
+                width: 800px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            #gamecanvas { 
+                width: 800px;
+                height: 600px;
+            }
+            #info {
+                width: 800px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            @font-face {
+                font-family:Cosmic;
+                src: url(font/acknowtt.ttf);
+            }
+            @font-face {
+                font-family:Invaders;
+                src: url(font/INVADERS.TTF);
+            }
         </style>
-    </header>
+        <img id="invader" src="img/invader.png" alt="Invader" width="220" height="277">
+        
+    </head>
     <body>
-        <div id="Starfield"></div>
+        <div id="starfield"></div>
+        <div id="gamecontainer">
+        <canvas id="gameCanvas"></canvas>
+        </div>
+        <div id="info">
+            <p>Mova-se com as setas e atire com a tecla espaço, boa sorte comandante!</p>
+            <p><a id="muteLink" href="#" onclick="toggleMute()">MUDO</a></p>
+        </div>
+
         <script src="js/starfield.js"></script>
-        <script src="js/spaceengine"></script>
+        <script src="js/spaceengine.js"></script>
         <script>
+
+            //  Criação do starfield.
             var container = document.getElementById('starfield');
             var starfield = new Starfield();
             starfield.initialise(container);
             starfield.start();
+
+            //  Setinstalação do canvas.
+            var canvas = document.getElementById("gameCanvas");
+            canvas.width = 800;
+            canvas.height = 600;
+
+            //  Criação do jogo.
+            var game = new Game();
+
+            //  Inciniando o jogo com canvas.
+            game.initialise(canvas);
+
+            //  Inicio do jogo.
+            game.start();
+
+            //  Lista de comandos.
+            window.addEventListener("keydown", function keydown(e) {
+                var keycode = e.which || window.event.keycode;
+                //  Processamento do comando left/right/space (37/29/32)
+                if(keycode == 37 || keycode == 39 || keycode == 32) {
+                    e.preventDefault();
+                }
+                game.keyDown(keycode);
+            });
+            window.addEventListener("keyup", function keydown(e) {
+                var keycode = e.which || window.event.keycode;
+                game.keyUp(keycode);
+            });
+
+            function toggleMute() {
+                game.mute();
+                document.getElementById("muteLink").innerText = game.sounds.mute ? "unmute" : "mute";
+            }
         </script>
-    </body>
+     </body>
 </html>
